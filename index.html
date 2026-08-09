@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSP Digital Register - Alam Communication</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f3f6fa;color:#172033}
+button,input,select,textarea{font:inherit}button{cursor:pointer}
+.hidden{display:none!important}
+.login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,#063b66,#087f8c)}
+.login-card{width:100%;max-width:420px;background:#fff;border-radius:20px;padding:35px;box-shadow:0 25px 70px #0005;text-align:center}
+.logo{font-size:48px}.login-card h1{color:#075985;font-size:24px;margin:8px 0 4px}.login-card p{color:#777;margin:0 0 25px}
+.login-card label,.form-box label,.filter-box label{display:block;font-size:13px;font-weight:700;margin:0 0 6px}
+.login-card input,.form-box input,.form-box select,.form-box textarea,.filter-box input,.filter-box select{width:100%;padding:12px;border:1px solid #ccd5df;border-radius:8px;outline:0;background:#fff}
+.login-card input{margin-bottom:16px}
+.login-card input:focus,.form-box input:focus,.form-box select:focus,.form-box textarea:focus,.filter-box input:focus,.filter-box select:focus{border-color:#0878b5;box-shadow:0 0 0 3px #0878b51a}
+.btn{border:0;border-radius:8px;padding:11px 17px;font-weight:700}.primary{background:#075985;color:#fff}.green{background:#166534;color:#fff}.gray{background:#edf1f5;color:#263244}.login-btn{width:100%}
+.login-msg{min-height:20px;color:#c62828;font-size:13px;margin-top:10px}
+.header{background:#fff;min-height:72px;padding:12px 28px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px #00000012}
+.brand{display:flex;align-items:center;gap:10px;color:#075985;font-weight:800;font-size:20px}.brand small{display:block;color:#777;font-size:11px}
+.head-right{display:flex;align-items:center;gap:15px;font-size:13px}.logout{border:0;background:#fee2e2;color:#a71919;border-radius:7px;padding:9px 14px;font-weight:700}
+.wrap{max-width:1400px;margin:auto;padding:30px}.welcome{text-align:center;margin:15px 0 30px}.welcome h1{font-size:30px;margin:0 0 8px}.welcome p{color:#6b7280}
+.main-buttons{max-width:1050px;margin:auto;display:grid;grid-template-columns:1fr 1fr;gap:25px}
+.main-button{min-height:220px;border:0;border-radius:18px;color:#fff;text-align:left;padding:30px;display:flex;flex-direction:column;justify-content:center;box-shadow:0 12px 30px #0002;transition:.2s}.main-button:hover{transform:translateY(-3px)}
+.main-button .icon{font-size:50px}.main-button strong{font-size:24px;margin-top:15px}.main-button small{font-size:14px;margin-top:8px;opacity:.92}
+.blue-card{background:linear-gradient(135deg,#075985,#0e7490)}.green-card{background:linear-gradient(135deg,#166534,#15803d)}
+.page-head{display:flex;align-items:center;gap:15px;margin-bottom:20px}.page-head .title{flex:1}.page-head h2{margin:0 0 5px}.page-head p{margin:0;color:#6b7280;font-size:14px}
+.back{border:1px solid #d5dce5;background:#fff;padding:10px 14px;border-radius:8px;font-weight:700}
+.form-box,.filter-box,.table-box{background:#fff;border:1px solid #e1e7ee;border-radius:14px;box-shadow:0 4px 15px #0000000a}.form-box{padding:25px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}.full{grid-column:1/-1}.form-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:20px}
+.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-bottom:18px}.summary-card{background:#fff;border:1px solid #e1e7ee;border-radius:12px;padding:18px}.summary-card small{color:#687385}.summary-card b{display:block;font-size:22px;margin-top:7px}.deposit{color:#16803b}.withdrawal{color:#c62828}
+.filter-box{padding:18px;display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1.5fr auto;gap:12px;align-items:end;margin-bottom:18px}
+.table-box{overflow:hidden}.table-scroll{overflow:auto}table{border-collapse:collapse;width:100%;min-width:1300px}th{background:#eef3f8;text-align:left;font-size:12px;padding:13px 10px;white-space:nowrap}td{padding:12px 10px;border-top:1px solid #e7ebf0;font-size:13px;vertical-align:top}
+.tag{font-weight:700}.tag.deposit{color:#16803b}.tag.withdrawal{color:#c62828}.mini{border:0;padding:6px 9px;border-radius:6px;font-size:12px;margin-right:4px}.edit{background:#dbeafe;color:#1d4ed8}.delete{background:#fee2e2;color:#b91c1c}
+.no-data{text-align:center;padding:35px;color:#8993a2}footer{text-align:center;padding:25px;color:#737d8c;font-size:13px}
+@media(max-width:850px){.main-buttons,.summary{grid-template-columns:1fr}.grid,.filter-box{grid-template-columns:1fr}.full{grid-column:auto}.header{padding:12px 15px;flex-direction:column;align-items:flex-start;gap:10px}.head-right{width:100%;justify-content:space-between}.wrap{padding:15px}.page-head{flex-wrap:wrap}.main-button{min-height:180px}.main-button strong{font-size:20px}}
+@media print{.header .head-right,.back,.page-head .print,.filter-box,.mini,footer,.main-buttons,.welcome{display:none!important}.wrap{padding:0}.page-head{border-bottom:2px solid #000;padding-bottom:10px}.summary{grid-template-columns:repeat(4,1fr)}.summary-card{box-shadow:none}body{background:#fff}table{min-width:0}th,td{font-size:9px;padding:5px}}
+</style>
+</head>
+<body>
+
+<div id="loginPage" class="login-page">
+  <div class="login-card">
+    <div class="logo">🏦</div>
+    <h1>CSP DIGITAL REGISTER</h1>
+    <p>ALAM COMMUNICATION</p>
+    <form id="loginForm">
+      <label>Username</label>
+      <input id="loginUser" autocomplete="username" required placeholder="Enter username">
+      <label>Password</label>
+      <input id="loginPass" type="password" autocomplete="current-password" required placeholder="Enter password">
+      <button class="btn primary login-btn" type="submit">🔐 LOGIN</button>
+      <div id="loginMsg" class="login-msg"></div>
+    </form>
+  </div>
+</div>
+
+<div id="app" class="hidden">
+<header class="header">
+  <div class="brand">🏦 <div>CSP DIGITAL REGISTER<small>ALAM COMMUNICATION</small></div></div>
+  <div class="head-right"><span id="today"></span><button class="logout" onclick="logout()">🚪 Logout</button></div>
+</header>
+
+<main class="wrap">
+<section id="home">
+  <div class="welcome"><h1>Welcome, <span id="loggedUser">Admin</span> 👋</h1><p>अपने CSP के customer और daily transaction को आसानी से manage करें।</p></div>
+  <div class="main-buttons">
+    <button class="main-button blue-card" onclick="openCustomer()"><span class="icon">👤</span><strong>Customer Transaction</strong><small>Aadhaar, नाम, पता और Withdrawal / Deposit transaction दर्ज करें</small></button>
+    <button class="main-button green-card" onclick="openReport()"><span class="icon">📊</span><strong>Daily Transaction Report</strong><small>दिन, महीना और साल के हिसाब से पूरा transaction filter करें</small></button>
+  </div>
+</section>
+
+<section id="customerPage" class="hidden">
+  <div class="page-head"><button class="back" onclick="goHome()">← Home</button><div class="title"><h2>Customer Transaction</h2><p>Customer की transaction details save करें</p></div></div>
+  <form id="transactionForm" class="form-box">
+    <input type="hidden" id="editId">
+    <div class="grid">
+      <div><label>Aadhaar Number *</label><input id="aadhaar" inputmode="numeric" maxlength="12" placeholder="12 digit Aadhaar" required></div>
+      <div><label>Customer Name *</label><input id="customerName" placeholder="Customer full name" required></div>
+      <div class="full"><label>Address *</label><textarea id="address" rows="3" placeholder="Customer full address" required></textarea></div>
+      <div><label>Transaction Type *</label><select id="transactionType" required><option value="">Select Transaction</option><option value="Withdrawal">Withdrawal</option><option value="Deposit">Deposit</option></select></div>
+      <div><label>Amount (₹) *</label><input id="amount" type="number" min="1" step="0.01" placeholder="Enter amount" required></div>
+      <div><label>Mobile Number</label><input id="mobile" inputmode="numeric" maxlength="10" placeholder="10 digit mobile"></div>
+      <div><label>Service</label><select id="service"><option>AEPS</option><option>CSP Cash</option><option>Other</option></select></div>
+      <div class="full"><label>Remarks</label><input id="remarks" placeholder="Optional remarks"></div>
+    </div>
+    <div class="form-actions"><button type="button" class="btn gray" onclick="resetForm()">Reset</button><button type="submit" class="btn primary">💾 Save Transaction</button></div>
+  </form>
+</section>
+
+<section id="reportPage" class="hidden">
+  <div class="page-head"><button class="back" onclick="goHome()">← Home</button><div class="title"><h2>Daily Transaction Report</h2><p>किसी भी date, month या year का data देखें</p></div><button class="btn green print" onclick="window.print()">🖨 Print Report</button></div>
+  <div class="summary">
+    <div class="summary-card"><small>Total Transactions</small><b id="totalCount">0</b></div>
+    <div class="summary-card"><small>Total Deposit</small><b class="deposit" id="totalDeposit">₹0.00</b></div>
+    <div class="summary-card"><small>Total Withdrawal</small><b class="withdrawal" id="totalWithdrawal">₹0.00</b></div>
+    <div class="summary-card"><small>Net Amount</small><b id="netAmount">₹0.00</b></div>
+  </div>
+  <div class="filter-box">
+    <div><label>From Date</label><input type="date" id="fromDate"></div>
+    <div><label>To Date</label><input type="date" id="toDate"></div>
+    <div><label>Year</label><select id="yearFilter"><option value="">All Years</option></select></div>
+    <div><label>Transaction Type</label><select id="reportType"><option value="">All</option><option>Deposit</option><option>Withdrawal</option></select></div>
+    <div><label>Search Aadhaar / Name / Mobile</label><input id="searchReport" placeholder="Search..."></div>
+    <button class="btn gray" onclick="clearFilters()">Clear</button>
+  </div>
+  <div class="table-box"><div class="table-scroll">
+    <table><thead><tr><th>#</th><th>Date & Time</th><th>Aadhaar</th><th>Customer Name</th><th>Address</th><th>Mobile</th><th>Type</th><th>Amount</th><th>Service</th><th>Action</th></tr></thead><tbody id="reportBody"></tbody></table>
+  </div><div id="noData" class="no-data">कोई transaction नहीं मिला।</div></div>
+</section>
+</main>
+<footer>© 2026 ALAM COMMUNICATION • CSP Digital Register</footer>
+</div>
+
+<script>
+const DB_KEY="alam_csp_transactions_v1";
+const LOGIN_KEY="alam_csp_logged";
+const USER_KEY="alam_csp_user";
+const $=id=>document.getElementById(id);
+const esc=v=>String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
+const money=n=>Number(n||0).toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2});
+function data(){try{return JSON.parse(localStorage.getItem(DB_KEY)||"[]")}catch(e){return[]}}
+function save(d){localStorage.setItem(DB_KEY,JSON.stringify(d))}
+function showApp(){$("loginPage").classList.add("hidden");$("app").classList.remove("hidden");$("loggedUser").textContent=localStorage.getItem(USER_KEY)||"Admin";$("today").textContent=new Date().toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"})}
+function goHome(){$("home").classList.remove("hidden");$("customerPage").classList.add("hidden");$("reportPage").classList.add("hidden");window.scrollTo(0,0)}
+function openCustomer(){$("home").classList.add("hidden");$("reportPage").classList.add("hidden");$("customerPage").classList.remove("hidden");window.scrollTo(0,0)}
+function openReport(){$("home").classList.add("hidden");$("customerPage").classList.add("hidden");$("reportPage").classList.remove("hidden");buildYears();renderReport();window.scrollTo(0,0)}
+function logout(){if(confirm("Logout करना चाहते हैं?")){localStorage.removeItem(LOGIN_KEY);location.reload()}}
+$("loginForm").addEventListener("submit",e=>{e.preventDefault();if($("loginUser").value.trim()==="admin"&&$("loginPass").value==="123456"){localStorage.setItem(LOGIN_KEY,"1");localStorage.setItem(USER_KEY,"admin");showApp()}else $("loginMsg").textContent="❌ Username या password गलत है।"});
+$("transactionForm").addEventListener("submit",e=>{e.preventDefault();let aad=$("aadhaar").value.replace(/\D/g,""),mob=$("mobile").value.replace(/\D/g,""),amt=+$("amount").value;if(!/^\d{12}$/.test(aad))return alert("कृपया 12 digit Aadhaar number डालें।");if(mob&&mob.length!==10)return alert("Mobile number 10 digit होना चाहिए।");if(!(amt>0))return alert("Valid amount डालें।");let d=data(),id=+$("editId").value,old=d.find(x=>x.id===id);let x={id:id||Date.now(),aadhaar:aad,name:$("customerName").value.trim(),address:$("address").value.trim(),mobile:mob,type:$("transactionType").value,amount:amt,service:$("service").value,remarks:$("remarks").value.trim(),dateTime:old?old.dateTime:new Date().toISOString()};if(id)d=d.map(a=>a.id===id?x:a);else d.push(x);save(d);alert(id?"✅ Transaction updated successfully!":"✅ Transaction saved successfully!");resetForm();openReport()});
+function resetForm(){$("transactionForm").reset();$("editId").value=""}
+function buildYears(){let s=$("yearFilter"),old=s.value,ys=[...new Set(data().map(x=>new Date(x.dateTime).getFullYear()))].sort((a,b)=>b-a);s.innerHTML='<option value="">All Years</option>'+ys.map(y=>`<option value="${y}">${y}</option>`).join("");s.value=old}
+function renderReport(){let from=$("fromDate").value,to=$("toDate").value,year=$("yearFilter").value,type=$("reportType").value,q=$("searchReport").value.toLowerCase().trim();let d=data().filter(x=>{let dt=new Date(x.dateTime),day=dt.toISOString().slice(0,10),txt=[x.aadhaar,x.name,x.mobile,x.address,x.service].join(" ").toLowerCase();return(!from||day>=from)&&(!to||day<=to)&&(!year||dt.getFullYear()==year)&&(!type||x.type===type)&&(!q||txt.includes(q))});d.sort((a,b)=>new Date(b.dateTime)-new Date(a.dateTime));let dep=0,wit=0;d.forEach(x=>x.type==="Deposit"?dep+=+x.amount:wit+=+x.amount);$("totalCount").textContent=d.length;$("totalDeposit").textContent="₹"+money(dep);$("totalWithdrawal").textContent="₹"+money(wit);$("netAmount").textContent="₹"+money(dep-wit);$("reportBody").innerHTML="";$("noData").style.display=d.length?"none":"block";d.forEach((x,i)=>{let dt=new Date(x.dateTime),tr=document.createElement("tr");tr.innerHTML=`<td>${i+1}</td><td>${dt.toLocaleDateString("en-IN")}<br>${dt.toLocaleTimeString("en-IN",{hour:"2-digit",minute:"2-digit"})}</td><td>${esc(x.aadhaar)}</td><td><strong>${esc(x.name)}</strong></td><td>${esc(x.address)}</td><td>${esc(x.mobile||"-")}</td><td class="tag ${x.type.toLowerCase()}">${esc(x.type)}</td><td>₹${money(x.amount)}</td><td>${esc(x.service)}</td><td><button class="mini edit" onclick="editTx(${x.id})">✏ Edit</button><button class="mini delete" onclick="deleteTx(${x.id})">🗑 Delete</button></td>`;$("reportBody").appendChild(tr)})}
+function editTx(id){let x=data().find(a=>a.id===id);if(!x)return;openCustomer();$("editId").value=x.id;$("aadhaar").value=x.aadhaar;$("customerName").value=x.name;$("address").value=x.address;$("mobile").value=x.mobile||"";$("transactionType").value=x.type;$("amount").value=x.amount;$("service").value=x.service;$("remarks").value=x.remarks||""}
+function deleteTx(id){if(!confirm("यह transaction delete करें?"))return;save(data().filter(x=>x.id!==id));buildYears();renderReport()}
+function clearFilters(){$("fromDate").value="";$("toDate").value="";$("yearFilter").value="";$("reportType").value="";$("searchReport").value="";renderReport()}
+["fromDate","toDate","yearFilter","reportType"].forEach(id=>$(id).addEventListener("change",renderReport));
+$("searchReport").addEventListener("input",renderReport);
+if(localStorage.getItem(LOGIN_KEY)==="1")showApp();
+</script>
+</body>
+</html>
